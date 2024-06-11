@@ -1,0 +1,25 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Formulario de Comentarios</title>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+
+  function submitComment() {
+    const name = document.getElementById('name').value;
+    const comment = document.getElementById('comment').value;
+    socket.emit('new comment', { name, comment });
+  }
+</script>
+</head>
+<body>
+<form id="commentForm" onsubmit="submitComment(); return false;">
+  Nombre: <input type="text" id="name" required>
+  Comentario: <textarea id="comment" required></textarea>
+  <input type="submit" value="Enviar">
+</form>
+</body>
+</html>

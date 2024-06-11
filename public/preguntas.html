@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Comentarios</title>
+<style>
+  .comment {
+    position: absolute;
+    opacity: 0;
+    transition: opacity 2s ease-in-out; /* Transición suave de opacidad */
+  }
+</style>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+  const commentsQueue = []; // Cola para almacenar los comentarios
+  let activeComments = []; // Almacena los comentarios actualmente visibles
+
+  socket.on('comment received', (data) => {
+    commentsQueue.push({ name: data.name, comment: data.comment });
+    displayComments(); // Muestra los comentarios
+  });
+
+  function displayComments() {
+    // Muestra un nuevo comentario cada 5 segundos
+    setInterval(() => {
+      if (commentsQueue.length > 0) {
+        const data = commentsQueue.shift(); // Obtiene el primer comentario de la cola
+        const commentDiv = createCommentElement(data.name, data.comment);
+        document.getElementById('randomComments').appendChild(commentDiv);
+        activeComments.push(commentDiv);
+
+        // Fade in
+        setTimeout(() => {
+          commentDiv.style.opacity = 1;
+        }, 100);
+
+        // Espera 10 segundos antes de comenzar a desaparecer
+        setTimeout(() => {
+          // Fade out
+          commentDiv.style.opacity = 0;
+          // Elimina el comentario después de que desaparezca
+          setTimeout(() => {
+            const index = activeComments.indexOf(commentDiv);
+            if (index > -1) {
+              activeComments.splice(index, 1); // Elimina de los comentarios activos
+            }
+            commentDiv.remove();
+          }, 2000); // Duración del fade out
+        }, 10000);
+      }
+    }, 5000);
+  }
+
+  function createCommentElement(name, comment) {
+    const randomX = Math.floor(Math.random() * window.innerWidth);
+    const randomY = Math.floor(Math.random() * window.innerHeight);
+    const commentDiv = document.createElement('div');
+    commentDiv.classList.add('comment');
+    commentDiv.style.left = randomX + 'px';
+    commentDiv.style.top = randomY + 'px';
+    commentDiv.textContent = name + ': ' + comment;
+    return commentDiv;
+  }
+
+  // Inicia el ciclo de mostrar comentarios
+  displayComments();
+</script>
+</head>
+<body>
+<div id="randomComments"></div>
+</body>
+</html>
