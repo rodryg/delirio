@@ -14,11 +14,38 @@
     socket.emit('new comment', { name, comment });
   }
 </script>
+<style>
+  body {
+    background-color: black;
+    color: white;
+    font-family: sans-serif;
+  }
+
+  input[type="text"], textarea {
+    background-color: #444;
+    border: none;
+    padding: .5em;
+    margin: .5em 0;
+    width: 80%;
+    color: white;
+  }
+
+  input[type="submit"] {
+    padding: .5em;
+  }
+
+</style>
 </head>
 <body>
 <form id="commentForm" onsubmit="submitComment(); return false;">
-  Nombre: <input type="text" id="name" required>
-  Comentario: <textarea id="comment" required></textarea>
+  <h1>¿Cómo sería tu fiesta ideal?</h1>
+  <div>Nombre</div>
+  <input type="text" id="name" required><br>
+  <br>
+  <div>Respuesta</div>
+  <textarea id="comment" required></textarea>
+  <br>
+  <br>
   <input type="submit" value="Enviar">
 </form>
 </body>
